@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "npm run dev",
-    "dev": "webpack --progress --colors --watch",
+    "dev": "webpack-dev-server --inline --hot --progress --colors --watch",
     "build": "webpack --progress --colors"
   },
   "dependencies": {},

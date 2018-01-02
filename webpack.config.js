@@ -72,12 +72,6 @@ const rules = [
 module.exports = {
   name: 'vuejs components',
 
-  devServer: {
-    host: 'localhost',
-    port: 8000,
-    compress: true
-  },
-
   entry: path.resolve(__dirname, `${devFolder}/main.js`),
 
   output: {

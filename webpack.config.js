@@ -9,7 +9,7 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // --- Environment
-const isProduction = (process.env.NODE_ENV === 'production')
+const isProduction = (process.env.NODE_ENV === 'production');
 
 // --- dev folder
 const devFolder = path.resolve(__dirname, './frontend');

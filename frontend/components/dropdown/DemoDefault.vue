@@ -13,16 +13,7 @@
         </ul>
       </template>
     </dropdown>
-    <pre><code class="code code--html">&lt;dropdown&gt;
-  &lt;template slot="btn"&gt;Button text&lt;/template&gt;
-  &lt;template slot="body"&gt;
-      &lt;ul style="margin:0;padding:0;list-style:none"&gt;
-      &lt;li&gt;&lt;input type="checkbox"&gt;item 1&lt;/li&gt;
-      &lt;li&gt;&lt;input type="checkbox"&gt;item 2&lt;/li&gt;
-      &lt;li&gt;&lt;input type="checkbox"&gt;item 3&lt;/li&gt;
-      &lt;/ul&gt;
-  &lt;/template&gt;
-&lt;/dropdown&gt;</code></pre>
+    <pre><code class="code code--html">&lt;dropdown&gt;<br />  &lt;template slot="btn"&gt;Button text&lt;/template&gt;<br />  &lt;template slot="body"&gt;<br />    &lt;ul&gt;<br />      &lt;li v-for="i in [1, 2, 3, 4, 5]"&gt;<br />        &lt;label&gt;&lt;input type="checkbox"&gt;item {{ index }}&lt;/label&gt;<br />      &lt;/li&gt;<br />    &lt;/ul&gt;<br />  &lt;/template&gt;<br />&lt;/dropdown&gt;</code></pre>
   </article>
 </template>
 
@@ -35,7 +26,8 @@
     data() {
       return {
         quote: 'Default use',
-        m: [false, false, false, false, false]
+        m: [false, false, false, false, false],
+        index: '{{ i }}'
       }
     }
   }

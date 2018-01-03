@@ -12,6 +12,12 @@
         <code v-for="(code, key) of prop.code" class="code" :class="`code--${key}`" v-html="code"></code>
       </pre>
     </div>
+    <div :class="api.props">
+      <h3 :class="api.title">Close dropdown programmatically</h3>
+      <pre>
+        <code class="code code--js">// global<br>$root.$emit('bp-dropdown:hide')<br>// local<br>&lt;dropdown ref="dropdown"&gt;&lt;/dropdown&gt;<br>$refs.dropdown.isHidden = true</code>
+      </pre>
+    </div>
   </article>
 </template>
 

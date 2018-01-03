@@ -134,8 +134,8 @@
 
       // --- hide dropdown if other dropdowns show
       // --- or document clicked
-      $root.$on('bq-dropdown:open', () => this.isHidden = true);
-      $root.$on('bq-dropdown:hide', () => this.isHidden = true);
+      $root.$on('bp-dropdown:open', () => this.isHidden = true);
+      $root.$on('bp-dropdown:hide', () => this.isHidden = true);
 
       // --- hide dropdown on document click event
       if (this.trigger === 'click' && !$root['is-bp-dropdown']) {
@@ -151,12 +151,12 @@
           const dropdown = target.closest('.bp-dropdown__btn') || target.closest('.bp-dropdown__body');
 
           if (!dropdown) {
-            $root.$emit('bq-dropdown:hide');
+            $root.$emit('bp-dropdown:hide');
           }
         }
       }
 
-      this.id = 'bq-dropdown-' + this.generateRandomId();
+      this.id = 'bp-dropdown-' + this.generateRandomId();
     },
 
     methods: {
@@ -248,13 +248,13 @@
           this.isLoading = false;
           if (!e.target.closest('.bp-dropdown__body')) {
             // --- hide dropdown if other dropdowns show
-            this.$root.$emit('bq-dropdown:open');
+            this.$root.$emit('bp-dropdown:open');
           }
 
           setTimeout(this.prepare, 0);
         });
 
-        promise.catch(() => { throw Error('bq-dropdown promise error') });
+        promise.catch(() => { throw Error('bp-dropdown promise error') });
       },
 
       prepare() {

@@ -1,5 +1,5 @@
 <template>
-  <article>
+  <article id="align">
     <blockquote class="quote">{{ quote }}:</blockquote>
     <dropdown :class="demo.dropdown" :align="'top'">
       <template slot="btn">Top</template>

@@ -1,10 +1,10 @@
 <template>
-  <article>
+  <article id="default">
     <blockquote class="quote">{{ quote }}:</blockquote>
     <dropdown :class="demo.dropdown">
       <template slot="btn">Custom btn text</template>
       <template slot="body">
-        <ul style="margin:0;padding:0;list-style:none">
+        <ul :class="demo.list">
           <li v-for="i in [1, 2, 3, 4, 5]">
             <label :class="demo.label">
               <input type="checkbox" v-model="m[i]">item {{ i }}
@@ -44,9 +44,13 @@
     input[type="checkbox"]
       margin-right: .5rem
 
-  ul li:last-child
-    display: flex
-    align-items: center
-    input[type="checkbox"]
-      margin-right: .5rem
+  .list
+    margin: 0
+    padding: 0
+    list-style:none
+    li:last-child
+      display: flex
+      align-items: center
+      input[type="checkbox"]
+        margin-right: .5rem
 </style>

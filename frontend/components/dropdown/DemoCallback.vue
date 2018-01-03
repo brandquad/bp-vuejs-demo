@@ -1,5 +1,5 @@
 <template>
-  <article>
+  <article id="callback">
     <blockquote class="quote">{{ quote }}:</blockquote>
     <dropdown :class="demo.dropdown" :before-open="callback">
       <template slot="btn">Custom callback</template>
@@ -38,12 +38,6 @@
     display: flex
     align-items: center
     cursor: pointer
-    input[type="checkbox"]
-      margin-right: .5rem
-
-  ul li:last-child
-    display: flex
-    align-items: center
     input[type="checkbox"]
       margin-right: .5rem
 </style>

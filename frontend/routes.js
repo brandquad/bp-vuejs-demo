@@ -10,7 +10,13 @@ export default [
   {
     name: 'dropdown',
     path: '/dropdown',
-    component: Dropdown
+    component: Dropdown,
+    children: [
+      {
+        name: 'dropdown-demo',
+        path: '/dropdown/:anchor'
+      }
+    ]
   },
   {
     name: 'other',

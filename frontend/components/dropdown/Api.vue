@@ -1,5 +1,5 @@
 <template>
-  <article>
+  <article id="api">
     <blockquote class="quote">{{ quote }}:</blockquote>
     <div :class="api.props" v-for="(prop, i) in props" :key="`prop-${i}`">
       <h3 :class="api.title">{{ prop.name }}</h3>

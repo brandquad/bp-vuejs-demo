@@ -15,7 +15,19 @@
   export default {
     name: 'app',
 
-    components: { Sidebar }
+    components: { Sidebar },
+
+    mounted() {
+      this.$router.onReady(() => {
+        this.$nextTick(() => {
+          const anchor = this.$route.params.anchor;
+          if (anchor) {
+            document.querySelector('main').scrollTop =
+              document.getElementById(anchor).offsetTop - 30;
+          }
+        })
+      });
+    }
   }
 </script>
 
@@ -29,7 +41,7 @@
     overflow: hidden
 
   .sidebar
-    flex-basis: 15rem
+    flex-basis: 20rem
 
   .center
     flex: 1 0 auto

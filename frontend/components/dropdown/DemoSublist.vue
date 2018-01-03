@@ -1,10 +1,10 @@
 <template>
-  <article>
+  <article id="sublist">
     <blockquote class="quote">{{ quote }}:</blockquote>
     <dropdown :class="demo.dropdown">
       <template slot="btn">Sublist button</template>
       <template slot="body">
-        <ul style="margin:0;padding:0;list-style:none">
+        <ul :class="demo.list" style="margin:0;padding:0;list-style:none">
           <li>Custom item</li>
           <li>
             <dropdown :trigger="'hover'" :role="'sublist'" :align="'right'">
@@ -59,9 +59,10 @@
     input[type="checkbox"]
       margin-right: .5rem
 
-  ul li:last-child
-    display: flex
-    align-items: center
-    input[type="checkbox"]
-      margin-right: .5rem
+  .list
+    li:last-child
+      display: flex
+      align-items: center
+      input[type="checkbox"]
+        margin-right: .5rem
 </style>

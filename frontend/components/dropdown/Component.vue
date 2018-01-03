@@ -146,7 +146,7 @@
           value: true
         });
 
-        document.onclick = (e) => {
+        document.onmousedown = document.ontouchstart = (e) => {
           const target = e.target;
           const dropdown = target.closest('.bp-dropdown__btn') || target.closest('.bp-dropdown__body');
 

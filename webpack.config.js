@@ -150,7 +150,9 @@ module.exports = {
       cssProcessorOptions: { safe: true }
     }),
     new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
+      minimize: isProduction,
+      sourceMap: false,
+      mangle: true,
       compress: {
         warnings: false
       },

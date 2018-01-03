@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import Dropdown from 'bp-vuejs-dropdown/Dropdown';
+  import Dropdown from 'bp-vuejs-dropdown';
 
   export default {
     components: { Dropdown },

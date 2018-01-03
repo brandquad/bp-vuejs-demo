@@ -138,7 +138,7 @@ module.exports = {
     hints: false
   },
 
-  devtool: (isProduction) ? false : 'source-map',
+  devtool: (isProduction) ? '' : 'source-map',
 
   plugins: ((!isProduction) ? [] : [
     new webpack.DefinePlugin({

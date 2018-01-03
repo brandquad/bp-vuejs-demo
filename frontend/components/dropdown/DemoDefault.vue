@@ -10,10 +10,17 @@
               <input type="checkbox" v-model="m[i]">item {{ i }}
             </label>
           </li>
+          <li>
+            <input type="checkbox">
+            <dropdown :trigger="'hover'" :role="'sublist'">
+              <template slot="btn">Sublist</template>
+              <template slot="body">Sublist content</template>
+            </dropdown>
+          </li>
         </ul>
       </template>
     </dropdown>
-    <pre><code class="code code--html">&lt;dropdown&gt;<br />  &lt;template slot="btn"&gt;Button text&lt;/template&gt;<br />  &lt;template slot="body"&gt;<br />    &lt;ul&gt;<br />      &lt;li v-for="i in [1, 2, 3, 4, 5]"&gt;<br />        &lt;label&gt;&lt;input type="checkbox"&gt;item {{ index }}&lt;/label&gt;<br />      &lt;/li&gt;<br />    &lt;/ul&gt;<br />  &lt;/template&gt;<br />&lt;/dropdown&gt;</code></pre>
+    <pre><code class="code code--html">&lt;dropdown&gt;<br />  &lt;template slot="btn"&gt;Button text&lt;/template&gt;<br />  &lt;template slot="body"&gt;<br />    &lt;ul&gt;<br />      &lt;li v-for="i in [1, 2, 3, 4, 5]"&gt;<br />        &lt;label&gt;<br />          &lt;input type="checkbox"&gt;item {{ index }}<br />        &lt;/label&gt;<br />      &lt;/li&gt;<br />      &lt;li&gt;<br />        &lt;input type="checkbox"&gt;<br />        &lt;dropdown :trigger="'hover'" :role="'sublist'"&gt;<br />          &lt;template slot="btn"&gt;Sublist&lt;/template&gt;<br />          &lt;template slot="body"&gt;Sublist content&lt;/template&gt;<br />        &lt;/dropdown&gt;<br />      &lt;/li&gt;<br />    &lt;/ul&gt;<br />  &lt;/template&gt;</code></pre>
   </article>
 </template>
 
@@ -41,6 +48,12 @@
     display: flex
     align-items: center
     cursor: pointer
+    input[type="checkbox"]
+      margin-right: .5rem
+
+  ul li:last-child
+    display: flex
+    align-items: center
     input[type="checkbox"]
       margin-right: .5rem
 </style>

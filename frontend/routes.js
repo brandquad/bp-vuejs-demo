@@ -15,6 +15,8 @@ export default [
   {
     name: 'other',
     path: '*',
-    component: Home
+    redirect: {
+      name: 'home'
+    }
   }
 ];

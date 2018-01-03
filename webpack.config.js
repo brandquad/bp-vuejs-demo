@@ -138,7 +138,7 @@ module.exports = {
     hints: false
   },
 
-  devtool: (isProduction) ? false : 'cheap-module-eval-source-map',
+  devtool: (isProduction) ? false : 'source-map',
 
   plugins: ((!isProduction) ? [] : [
     new webpack.DefinePlugin({

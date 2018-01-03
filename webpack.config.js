@@ -9,7 +9,7 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // --- Environment
-const isProduction = (process.env.NODE_ENV === 'production');
+const isProduction = true;
 
 // --- dev folder
 const devFolder = path.resolve(__dirname, './frontend');
@@ -106,8 +106,8 @@ module.exports = {
   entry: path.resolve(__dirname, `${devFolder}/main.js`),
 
   output: {
-    path: path.resolve(__dirname, `./dist`),
-    publicPath: './dist/',
+    path: path.resolve(__dirname, (isProduction) ? './build' : './dist'),
+    publicPath: (isProduction) ? './build/' : './dist/',
     filename: 'bp-vuejs.bundle.js',
     chunkFilename: '[name].chunk.js'
   },

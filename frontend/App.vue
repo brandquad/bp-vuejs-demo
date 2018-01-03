@@ -36,12 +36,15 @@
 <style lang="stylus" module="app">
   .wrapper
     display: flex
+    min-width: 60rem
     height: 100vh
     padding: $padding
     overflow: hidden
 
   .sidebar
     flex-basis: 20rem
+    @media (max-width 800px)
+      display: none
 
   .center
     flex: 1 0 auto

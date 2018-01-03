@@ -34,4 +34,5 @@
   .center
     flex: 1 0 auto
     padding: $padding
+    overflow: auto
 </style>

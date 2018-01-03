@@ -1,20 +1,27 @@
 <template>
-  <div class="bp-dropdown" :class="className">
-    <span :class="{ [`bp-dropdown__${(role) ? 'sub' : 'btn'}`]: true, [`bp-dropdown__${(role) ? 'sub' : 'btn'}--active`]: !isHidden, [`${className}-bp__btn`]: className }"
+  <div class="bp-dropdown" :class="{ className, 'bp-dropdown--sub': role }">
+    <span :class="{ [`bp-dropdown__${(role) ? 'sub' : 'btn'}`]: true, [`bp-dropdown__${(role) ? 'sub' : 'btn'}--active`]: !isHidden, [`${className}-bp__btn`]: className, [`${className}-bp__btn--active`]: !isHidden }"
           @click="_onToggle"
           @mouseenter="_onBtnEnter"
           @mouseleave="_onBtnLeave">
       <slot name="btn"></slot>
-      <slot v-if="isArrow" name="icon">
-        <svg class="bp-dropdown__icon"
+      <slot name="icon" v-if="isIcon">
+        <svg v-if="isLoading"
+             class="bp-dropdown__icon bp-dropdown__icon--spin"
+             viewBox="0 0 512 512">
+          <path fill="currentColor" d="M304 48c0 26.51-21.49 48-48 48s-48-21.49-48-48 21.49-48 48-48 48 21.49 48 48zm-48 368c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm208-208c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zM96 256c0-26.51-21.49-48-48-48S0 229.49 0 256s21.49 48 48 48 48-21.49 48-48zm12.922 99.078c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.491-48-48-48zm294.156 0c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.49-48-48-48zM108.922 60.922c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.491-48-48-48z"></path>
+        </svg>
+        <svg v-else
+             class="bp-dropdown__icon"
+             :class="{ [`bp-dropdown__icon--${align}`]: align }"
              viewBox="0 0 256 512">
             <path fill="currentColor" d="M119.5 326.9L3.5 209.1c-4.7-4.7-4.7-12.3 0-17l7.1-7.1c4.7-4.7 12.3-4.7 17 0L128 287.3l100.4-102.2c4.7-4.7 12.3-4.7 17 0l7.1 7.1c4.7 4.7 4.7 12.3 0 17L136.5 327c-4.7 4.6-12.3 4.6-17-.1z"></path>
         </svg>
       </slot>
     </span>
     <transition name="fade">
-      <div class="bp-dropdown__body"
-           v-if="!isHidden"
+      <div v-if="!isHidden"
+           class="bp-dropdown__body"
            :id="id"
            :style="{ minWidth: `${width}px`, top: `${top}px`, left: `${left}px` }"
            :class="{ [`${className}-bp__body`]: className }"
@@ -44,6 +51,24 @@
         default: null
       },
 
+      align: {
+        type: String,
+        required: false,
+        default: 'bottom'
+      },
+
+      x: {
+        type: Number,
+        required: false,
+        default: 0
+      },
+
+      y: {
+        type: Number,
+        required: false,
+        default: 0
+      },
+
       beforeOpen: {
         type: Function,
         required: false,
@@ -62,7 +87,7 @@
         default: false
       },
 
-      isArrow: {
+      isIcon: {
         type: Boolean,
         required: false,
         default: true
@@ -78,6 +103,7 @@
     data() {
       return {
         isHidden: true,
+        isLoading: false,
 
         id: null,
         timeout: null,
@@ -195,6 +221,10 @@
         }
 
         const to = e.toElement;
+        if (!to) {
+          return;
+        }
+
         if (to.closest('.bp-dropdown__btn') || to.closest('.bp-dropdown__sub')) {
           return;
         }
@@ -210,10 +240,12 @@
 
         // --- custom callback before open
         const promise = new Promise(resolve => {
+          this.isLoading = true;
           this.beforeOpen.call(this, resolve);
         });
 
         promise.then(() => {
+          this.isLoading = false;
           if (!e.target.closest('.bp-dropdown__body')) {
             // --- hide dropdown if other dropdowns show
             this.$root.$emit('bq-dropdown:open');
@@ -243,6 +275,10 @@
       },
 
       setPosition(btn, body) {
+        if (!btn || !body) {
+          return;
+        }
+
         const coords = this.getCoords(btn);
 
         // --- current position
@@ -257,17 +293,31 @@
         const bodyWidth = body.offsetWidth;
         const bodyHeight = body.offsetHeight;
 
-        this.top =
-          // --- if behind bottom
-          ((currentTop + btnHeight + bodyHeight) >= innerHeight) ?
-            (currentTop + pageYOffset - bodyHeight) :
-            (currentTop + pageYOffset + btnHeight);
+        switch(this.align) {
+          case 'top':
+            this.top = (currentTop + pageYOffset - bodyHeight);
+            this.left = (currentLeft + pageXOffset);
+            break;
+          case 'right':
+            this.top = (currentTop + pageYOffset);
+            this.left = (currentLeft + pageXOffset + btnWidth);
+            break;
+          case 'bottom':
+            this.top = (currentTop + pageYOffset + btnHeight);
+            this.left = (currentLeft + pageXOffset);
+            break;
+          case 'left':
+            this.top = (currentTop + pageYOffset);
+            this.left = (currentLeft + pageXOffset - bodyWidth);
+            break;
+          default:
+            this.top = (currentTop + pageYOffset + btnHeight);
+            this.left = (currentLeft + pageXOffset);
+            break;
+        }
 
-        this.left =
-          // --- if behind left
-          ((currentLeft + bodyWidth) >= innerWidth) ?
-            (currentLeft + pageXOffset - bodyWidth + btnWidth) :
-            (currentLeft + pageXOffset);
+        this.top += this.y;
+        this.left += this.x;
       },
 
       getCoords(el) {
@@ -282,6 +332,19 @@
 </script>
 
 <style>
+  .bp-dropdown--sub {
+    width: 100%;
+  }
+
+  .bp-dropdown--sub .bp-dropdown__btn,
+  .bp-dropdown--sub .bp-dropdown__sub {
+    width: 100%;
+  }
+
+  .bp-dropdown--sub .bp-dropdown__icon {
+    margin-left: auto;
+  }
+
   .bp-dropdown__btn {
     display: inline-flex;
     align-items: center;
@@ -308,6 +371,48 @@
     transition: transform .1s ease;
   }
 
+  .bp-dropdown__icon--spin {
+    width: 12px;
+    height: 12px;
+    animation: spin 2s infinite linear;
+  }
+
+  .bp-dropdown__icon--top {
+    transform: rotate(-180deg);
+  }
+
+  .bp-dropdown__icon--right {
+    transform: rotate(-90deg);
+  }
+
+  .bp-dropdown__icon--bottom {
+    transform: rotate(0);
+  }
+
+  .bp-dropdown__icon--left {
+    transform: rotate(-270deg);
+  }
+
+  .bp-dropdown__btn--active .bp-dropdown__icon--top,
+  .bp-dropdown__sub--active .bp-dropdown__icon--top {
+    transform: rotate(0);
+  }
+
+  .bp-dropdown__btn--active .bp-dropdown__icon--right,
+  .bp-dropdown__sub--active .bp-dropdown__icon--right {
+    transform: rotate(-270deg);
+  }
+
+  .bp-dropdown__btn--active .bp-dropdown__icon--bottom,
+  .bp-dropdown__sub--active .bp-dropdown__icon--bottom {
+    transform: rotate(-180deg);
+  }
+
+  .bp-dropdown__btn--active .bp-dropdown__icon--left,
+  .bp-dropdown__sub--active .bp-dropdown__icon--left {
+    transform: rotate(-90deg);
+  }
+
   .bp-dropdown__body {
     position: fixed;
     top: 0;
@@ -318,19 +423,20 @@
     z-index: 9999;
   }
 
-  .bp-dropdown__btn--active .bp-dropdown__icon {
-    transform: rotate(-180deg);
-  }
-
-  .bp-dropdown__sub--active .bp-dropdown__icon {
-    transform: rotate(-180deg);
-  }
-
   .fade-enter-active, .fade-leave-active {
     transition: opacity .1s;
   }
 
   .fade-enter, .fade-leave-to {
     opacity: 0;
+  }
+
+  @keyframes spin {
+    0% {
+      transform:rotate(0)
+    }
+    100% {
+      transform:rotate(360deg)
+    }
   }
 </style>

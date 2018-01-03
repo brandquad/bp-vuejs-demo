@@ -2,6 +2,7 @@
   <section id="bp-home">
     <h1>{{ title }}</h1>
     <hr>
+    Home page in developing...
   </section>
 </template>
 

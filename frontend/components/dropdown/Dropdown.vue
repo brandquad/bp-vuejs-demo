@@ -38,10 +38,10 @@
         default: ''
       },
 
-      isHideBodyOverflow: {
-        type: Boolean,
+      unscroll: {
+        type: [HTMLElement, String],
         required: false,
-        default: false
+        default: null
       },
 
       beforeOpen: {
@@ -92,8 +92,13 @@
 
     watch: {
       isHidden(isHidden) {
-        if (this.isHideBodyOverflow) {
-          document.body.style.overflow = (!isHidden) ? 'hidden' : '';
+        if (this.unscroll) {
+          const el = (this.unscroll instanceof HTMLElement) ?
+            this.unscroll : document.querySelector(this.unscroll);
+
+          if (el) {
+            el.style.overflow = (!isHidden) ? 'hidden' : '';
+          }
         }
       }
     },

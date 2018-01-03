@@ -12,7 +12,7 @@
           </li>
           <li>
             <input type="checkbox">
-            <dropdown :trigger="'hover'" :role="'sublist'">
+            <dropdown :trigger="'hover'" :role="'sublist'" :unscroll="'body'">
               <template slot="btn">Sublist</template>
               <template slot="body">Sublist content</template>
             </dropdown>

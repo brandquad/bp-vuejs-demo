@@ -4,8 +4,12 @@
 const path = require('path');
 const webpack = require('webpack');
 
+// --- plugins
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 // --- Environment
-const isProduction = (process.env.NODE_ENV === 'production');
+const isProduction = (process.env.NODE_ENV === 'production')
 
 // --- dev folder
 const devFolder = path.resolve(__dirname, './frontend');
@@ -17,48 +21,75 @@ const aliasStyl = 'globalStyl';
 const globalStyl = `${devFolder}/assets/styl/_global.styl`;
 const globalScss = `${devFolder}/assets/scss/_global.scss`;
 
+const scss = `sass-loader?data=@import '~${aliasScss}';`;
+const styl = `stylus-loader?include css&import=~${aliasStyl}`;
+const css = 'css-loader?{discardComments:{removeAll:true}}';
 // --- module rules
 const rules = [
   {
     test: /\.css$/,
     use: [
       'vue-style-loader',
-      'css-loader',
-      'postcss-loader'
+      css
     ]
   },
   {
     test: /\.(scss|sass)$/,
     use: [
       'vue-style-loader',
-      'css-loader',
-      'postcss-loader',
-      'sass-loader'
+      css,
+      scss
     ]
   },
   {
     test: /\.(styl|stylus)$/,
     use: [
       'vue-style-loader',
-      'css-loader',
-      'postcss-loader',
-      'stylus-loader'
+      css,
+      styl
     ]
   },
   {
     test: /\.vue$/,
     loader: 'vue-loader',
     options: {
-      loaders: {
-        sass: { loader: getLoader('sass') },
-        scss: { loader: getLoader('scss') },
-        stylus: { loader: getLoader('stylus') }
-      },
+      extractCSS: true,
       cssModules: {
-        localIdentName: '[name]---[hash:base64:5]',
-        camelCase: true
+        minimize: true,
+        localIdentName: '[hash:base64:13]'
       },
-      autoprefixer: false // if postcss enabled
+      postcss: {
+        useConfigFile: false,
+        plugins: [
+          require('postcss-import')(),
+          require('postcss-cssnext')({
+            features: { rem: false }
+          })
+        ]
+      },
+      autoprefixer: false,
+      loaders: {
+        css: ExtractTextPlugin.extract({
+          use: `${css}`,
+          fallback: 'vue-style-loader'
+        }),
+        stylus: ExtractTextPlugin.extract({
+          use: `${css}!${styl}`,
+          fallback: 'vue-style-loader'
+        }),
+        sass: ExtractTextPlugin.extract({
+          use: `${css}!${scss}`,
+          fallback: 'vue-style-loader'
+        }),
+        scss: ExtractTextPlugin.extract({
+          use: `${css}!${scss}`,
+          fallback: 'vue-style-loader'
+        }),
+        postcss: ExtractTextPlugin.extract({
+          use: `postcss-loader`,
+          fallback: 'vue-style-loader'
+        })
+      }
     }
   },
   {
@@ -78,7 +109,7 @@ module.exports = {
     path: path.resolve(__dirname, `./dist`),
     publicPath: './dist/',
     filename: 'bp-vuejs.bundle.js',
-    chunkFilename: '[name].bundle.js'
+    chunkFilename: '[name].chunk.js'
   },
 
   module: {
@@ -109,41 +140,29 @@ module.exports = {
 
   devtool: (isProduction) ? false : 'cheap-module-eval-source-map',
 
-  plugins: (!isProduction) ? [] : [
+  plugins: ((!isProduction) ? [] : [
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"'
       }
     }),
+    new OptimizeCSSPlugin({
+      cssProcessorOptions: { safe: true }
+    }),
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
       compress: {
         warnings: false
+      },
+      output: {
+        space_colon: false,
+        comments: false
       }
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
     })
-  ]
+  ]).concat([
+    new ExtractTextPlugin('style.bundle.css')
+  ])
 };
-
-function getLoader(ext) {
-  const css = 'css-loader?{discardComments:{removeAll:true}}';
-  const postcss = 'postcss-loader?sourceMap';
-
-  let current;
-  switch(ext) {
-    case 'stylus':
-      current = `stylus-loader?include css&import=~${aliasStyl}`;
-      break;
-    case 'scss':
-    case 'sass':
-      current = `sass-loader?data=@import '~${aliasScss}';`;
-      break;
-    default:
-      current = '';
-      break;
-  }
-
-  return `vue-style-loader!${css}!${postcss}!${current}`;
-}

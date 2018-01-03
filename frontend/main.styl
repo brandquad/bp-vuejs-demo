@@ -1,0 +1,34 @@
+@import './assets/css/reboot.css'
+
+html
+  font-size: 62.5%
+
+body
+  font: 1.4rem/1.5 Roboto
+  color: $color-default
+
+.quote
+  margin: 1rem 0
+  padding-left: 1rem
+  border-left: .4rem solid #42b983
+
+.code
+  display: block
+  padding: $padding
+  position: relative
+  font-size: .85em
+  white-space: pre
+  background-color: #f8f8f8
+  &::after
+    position: absolute
+    top: 0
+    right: 0
+    color: #ccc
+    text-align: right
+    font-size: 1.5rem
+    padding: 1rem 2rem
+    font-weight: 600
+  &--html::after
+    content: 'HTML'
+  &--js::after
+    content: 'JS'
